@@ -1,0 +1,73 @@
+import tkinter
+from tkinter import *
+from tkinter import messagebox
+from Germ_cats import *
+from functools import partial
+import random
+
+
+root = tkinter.Tk()
+root.geometry("500x500")
+Masterlabel=Label(root, text="Please choose a Language to work on today!")
+Masterlabel.pack(side=TOP)
+var=IntVar()
+var.set(1)
+def Germwindow():
+    Germroot=tkinter.Tk()
+    Germroot.geometry("500x500")
+    var=IntVar()
+    var.set(0)
+    button_identities = []
+    words=[]
+    words+=categories
+    print(words)
+    def Change(x):
+              Wordroot = tkinter.Tk()
+              Wordroot.geometry("500x500")
+              Windowlabel=Label(Wordroot, text=x)
+              Windowlabel.pack()
+              name=StringVar()
+              for key, value in categories.items():
+                 if key == x:
+                     print ("this is "+ key)
+                     print (categories[x])
+                     testcats=categories[x]   #here we are splitting the categories dict into only the part that conforms to the original category the user selected (i.e abstract, verbs etc)
+              for key, value in testcats.items():
+                  print(key, value)
+              key=random.choice(list(testcats))
+              print("key is " + key)
+             
+              e1 = Entry(Wordroot, textvariable=name)
+              def checkinput(name):
+                  
+                  name=e1.get()
+                  for k, v in testcats.items():
+                      if k == key:
+                          if name == v:
+                              print("well done!")
+                      elif name!=v:
+                              print ("try again!")
+                      
+                  
+              e1.bind("<Return>",checkinput)
+              e1.pack()
+              
+    for word in words:
+                    
+                     Radiobutton=tkinter.Radiobutton(Germroot, text=word, command=lambda x=word: Change(x))   #you need a lambda to pass the particular WORD of the item being iterated over into the function as argument (otherwise it only does this AFTER all buttons created and passes LAST word in)
+        #here HAD command=partial(Change)) and worked
+                     
+                     Radiobutton.pack(side=tkinter.LEFT) 
+def Russwindow():
+    Rusroot = tkinter.Tk()
+    Rusroot.geometry("500x500")
+def Spanwindow():
+    Spanroot = tkinter.Tk()
+    Spanroot.geometry("500x500")
+w= Radiobutton(root, text ="German", variable=var,value=1, command=Germwindow)
+w.pack(anchor=W)
+w1 =Radiobutton(root, text ="Russian",variable=var, value=2, command=Russwindow)
+w1.pack(anchor=W)
+w3=Radiobutton(root, text ="Spanish", variable=var, value=3, command=Spanwindow)
+w3.pack(anchor=W)
+root.mainloop()
