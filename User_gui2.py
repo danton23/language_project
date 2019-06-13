@@ -79,9 +79,11 @@ def Germwindow():
                                               print ("try again!")
                                               
                   else:
-                      if v[:3]=="to ":
-                          
-                           print("to " + v[4-6] + " here are the first three letters of the word!")
+                      
+                      if v[0:2]=="to":
+                           
+                           
+                           print("to " + v[3:6] + " here are the first three letters of the word!")
                            with open("times.txt", "w") as f:
                                 f.write("1")
                           
