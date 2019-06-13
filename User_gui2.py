@@ -27,27 +27,51 @@ def Germwindow():
               Windowlabel=Label(Wordroot, text=x)
               Windowlabel.pack()
               name=StringVar()
-              for key, value in categories.items():
-                 if key == x:
+              def genlist():
+                 for key, value in categories.items():
+                   if key == x:
                      print ("this is "+ key)
-                     print (categories[x])
+                     print ("this is categories [x]")
+                     print(categories[x])
                      testcats=categories[x]   #here we are splitting the categories dict into only the part that conforms to the original category the user selected (i.e abstract, verbs etc)
-              for key, value in testcats.items():
-                  print(key, value)
-              key=random.choice(list(testcats))
-              print("key is " + key)
+                     return testcats
+                
+              testcats=genlist()
+              def genkey():
+                  key=random.choice(list(testcats))
+                  Germlabel=Label(Wordroot, text="How do you say " + key + " in English?")
+                  Germlabel.pack()
+                  return key
+              key=genkey()
+              
              
               e1 = Entry(Wordroot, textvariable=name)
               def checkinput(name):
                   
-                  name=e1.get()
+                     
                   for k, v in testcats.items():
-                      if k == key:
-                          if name == v:
-                              print("well done!")
-                      elif name!=v:
-                              print ("try again!")
-                      
+                      if k ==key:
+                         targetval=v
+                         
+    
+                  with open ("times.txt", "r") as f:
+                          contents=f.read()
+                          print (contents)
+                  numbcontents=int(contents)
+                  if numbcontents<=5:
+                      print("less")
+                      numbcontents+=1
+                      print("this is newnumb " + str(numbcontents))
+                      with open ("times.txt","w")as f:
+                          f.write(str(numbcontents))
+                      with open ("times.txt", "r") as f:
+                          contents=f.read()
+                          print("this is new contents "+ contents) 
+                  else:
+                      print("more")
+                      with open("times.txt", "w") as f:
+                          f.write("1")
+                          
                   
               e1.bind("<Return>",checkinput)
               e1.pack()
