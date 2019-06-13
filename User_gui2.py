@@ -48,7 +48,7 @@ def Germwindow():
               e1 = Entry(Wordroot, textvariable=name)
               def checkinput(name):
                   
-                     
+                  name=e1.get()  
                   for k, v in testcats.items():
                       if k ==key:
                          targetval=v
@@ -58,19 +58,37 @@ def Germwindow():
                           contents=f.read()
                           print (contents)
                   numbcontents=int(contents)
+                  print("this is target value " + targetval)
+                  print(name)
                   if numbcontents<=5:
                       print("less")
                       numbcontents+=1
                       print("this is newnumb " + str(numbcontents))
-                      with open ("times.txt","w")as f:
-                          f.write(str(numbcontents))
-                      with open ("times.txt", "r") as f:
-                          contents=f.read()
-                          print("this is new contents "+ contents) 
+                      
+                      if name==targetval:
+                                              print("well done!")
+                                              Wordroot.destroy()
+                                              Change(x)
+                                                 
+                      elif name!=targetval:
+                                              with open ("times.txt","w")as f:
+                                                    f.write(str(numbcontents))
+                                              with open ("times.txt", "r") as f:
+                                                    contents=f.read()
+                                                    print("this is new contents "+ contents)
+                                              print ("try again!")
+                                              
                   else:
-                      print("more")
-                      with open("times.txt", "w") as f:
-                          f.write("1")
+                      if v[:3]=="to ":
+                          
+                           print("to " + v[4-6] + " here are the first three letters of the word!")
+                           with open("times.txt", "w") as f:
+                                f.write("1")
+                          
+                      else:
+                                print(v[:3] + " here are the first three letters of the word! ")
+                                with open("times.txt", "w") as f:
+                                  f.write("1")
                           
                   
               e1.bind("<Return>",checkinput)
