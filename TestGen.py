@@ -23,6 +23,7 @@ class TestGenerator:
         print("hoola!")
         print("this is self.vocab " +str(self.vocab))
         print("this is "+ str(self.vocab))
+        print ("Здравствуй, мир!")
     
     def Change(event,self,x):
 
@@ -34,10 +35,10 @@ class TestGenerator:
               print(self)
               print("this is X " + str(x))
               print(x)
-              Wordroot = Tk()
-              Wordroot.geometry=("500x500")
-              Windowlabel=Label(Wordroot, text=x)
-              Windowlabel.pack()
+              Wordroot = Toplevel()
+              
+            #  Windowlabel=Label(Wordroot, text=x)
+             # Windowlabel.pack()
               name=StringVar()
         #      def action(self):
        #           print("destroyed")
@@ -144,3 +145,5 @@ class TestGenerator:
                   
               e1.bind("<Return>",checkinput)
               e1.pack()
+              Wordroot.geometry=("500x500")
+              Wordroot.update()
