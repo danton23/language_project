@@ -1,0 +1,14 @@
+{
+  "adjectives": {
+    "foo": "bar"
+  },
+  "abstract": {
+    "foodle": "muh noodle",
+    "George": "Costanza"
+  },
+  "verbs": {
+    "Jerry": "Seinfeld",
+    "Doug": "Heffernan",
+    "Edmund": "Blackadder"
+  }
+}

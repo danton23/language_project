@@ -1,4 +1,5 @@
 import tkinter
+import json
 from tkinter import *
 from tkinter import messagebox
 from Germ_cats import *
@@ -20,9 +21,10 @@ Rootvar=IntVar()
 Rootvar.set(1)
 print("this is SpanCategories " + str(SpanCategories))
 class Langwindow:
-    def __init__(self, wordslist):
+    def __init__(self, wordslist, usefile):
         
          self.wordslist=wordslist
+         self.usefile=usefile
          
     butvar=IntVar()
     butvar.set(99)
@@ -140,28 +142,39 @@ class Langwindow:
                                     key=thisline[0]
                                     value=thisline[1]
                                     print("key is " + key + " value is " + value)
-                                    print (self.wordslist + "THis is Langwindow.wordslist ")
+                                    print (str(self.wordslist) + "THis is Langwindow.wordslist ")
                                     print("key is " + key)
                                     print("this is current " + x)     ### WORK ON THIS this checks currently held values - vocab etc  - THIS ONE tells current category being manipulated
                                     print("this is words " + str(words))  ###this shows ALL values within language group 
                               #      words+={key:value}
-                                            
-                                        
+                                    for item in self.wordslist:
+                                        if item == x:
+                                            print("match found!")
+                                            print(self.wordslist[item])
+                                            self.wordslist[item][key]=value
+                                            print(self.wordslist[item][key] + "this is new value!")
+                                            with open ("Germ_cats.py","a+") as f:
+                                                for item in categories:
+                                                    if item==x:
+                                                        categories[item].update(key=value)
+                                                       
                                 print("this is newlist " + str(newlist))
                                 print("x frm tempwords.txt = " + str(x))
-                                with open("Germ_cats.py", "r") as f:
-                                    lines=f.readlines()
-                                    newoutput=[]
-                                    for i in lines:
-                                        thisline=i.split(" ")
-                                        newoutput.append(thisline)   #works with Russiantakenout
-                                    print(newoutput)
-                                        
-                                print(tempname2)
+        
+                                with open(self.usefile, 'r') as f:
+                                      data = json.load(f)
+                                      print(key + "this is key now")
+                                      print("this is json data[item]" + str(data[item]))
+                                      d1={key:value}
+                                      data[item].update(d1)
+                                      print(str(data[item]) + "this is data[item]")
+
+                                with open(self.usefile, 'w') as f:
+                                     json.dump(data, f, indent=2)
                                 WordRoot3.destroy()
-                            e2.bind("<Return>", checkvalue3)
+                            e2.bind("<Return>", lambda event, self=self: checkvalue3(event,self)) ##as Button returns event by default need to use Lambda to pass in self so can call it within function
                             e2.pack()
-                    e1.bind("<Return>",checkvalue2)
+                    e1.bind("<Return>",lambda event, self=self:checkvalue2(event,self))
                     e1.pack()
                 wordvar=IntVar()
                 wordvar.set(0)
@@ -226,13 +239,18 @@ class Langwindow:
         print("working!")
       
 #newwindow=Langwindow.create(self)
-Spanwindow=Langwindow(SpanCategories)
+
 #Spanwindow.wordslist=SpanCategories
-print(Spanwindow.wordslist)
-Russwindow=Langwindow(SpanCategories)
+#print(Spanwindow.wordslist)
+with open("Test_cats.json", 'r') as f:
+    data = json.load(f)
+Rusfile="Test_cats.json"
+Russwindow=Langwindow(data,Rusfile)
+
 #Russwindow.ident=Russwindow
 Russwindow.test()
-Germwindow=Langwindow(categories)
+Germwindow=Langwindow(categories, Rusfile)
+Spanwindow=Langwindow(SpanCategories, Rusfile)
 #Germwindow.wordslist=categories
 
 
