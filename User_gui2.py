@@ -228,7 +228,7 @@ class Langwindow:
         WindLabel.pack(side="top")
         wordframe=Frame(Langroot, height="250", width="250", bg="blue")
         wordframe.pack(expand="True", fill="both")
-        for word in words:
+        for word in self.wordslist:
             
             #list+=1 #use this to create values for the radiobutton value (determines if is on or off) this works!!
      #       print("this is current list value "+str(list)) + "this is current var "+str(var.get())
@@ -248,14 +248,18 @@ class Langwindow:
 #Spanwindow.wordslist=SpanCategories
 #print(Spanwindow.wordslist)
 
+
+def WordsGen(file):
+    words={}
+    with open(file, "r") as f:
+               data = json.load(f)
+               for k, v in data.items():
+                    words.update({k:v})
+    print("this is RUswords NOW!" + str(words))
+    return (words)
 Rusfile="Rus_cats.json"
-words={}
-with open(Rusfile, "r") as f:
-            data = json.load(f)
-            for k, v in data.items():
-                 words.update({k:v})
-print("this is RUswords NOW!" + str(words))
-Russwindow=Langwindow(words,Rusfile, "Russvocabcheck.json")
+Ruswords=WordsGen(Rusfile)
+Russwindow=Langwindow(Ruswords,Rusfile, "Russvocabcheck.json")
 
 #Russwindow.ident=Russwindow
 Russwindow.test()
