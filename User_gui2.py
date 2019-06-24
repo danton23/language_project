@@ -21,10 +21,14 @@ Rootvar=IntVar()
 Rootvar.set(1)
 print("this is SpanCategories " + str(SpanCategories))
 class Langwindow:
-    def __init__(self, wordslist, usefile):
+    def __init__(self, wordslist, usefile, vocabfile):
         
          self.wordslist=wordslist
          self.usefile=usefile
+         self.vocabfile=vocabfile
+         words={}
+         
+        
          
     butvar=IntVar()
     butvar.set(99)
@@ -34,10 +38,11 @@ class Langwindow:
         Langroot=Toplevel(root)
         
         Langroot.geometry("500x500")
-        words=[]
-        words+=self.wordslist
-        print("this is words " + str(words))
-        LangTest=TestGenerator(self.wordslist)
+        
+        
+       
+        print("this is words " + str(self.wordslist))
+        LangTest=TestGenerator(self.wordslist)  #arg was self.wordslist
         print("this is LangTest.vocab " + str(LangTest.vocab))
         LangTest.hoola()
  #      LangTest.parent=Langroot
@@ -242,15 +247,20 @@ class Langwindow:
 
 #Spanwindow.wordslist=SpanCategories
 #print(Spanwindow.wordslist)
-with open("Test_cats.json", 'r') as f:
-    data = json.load(f)
-Rusfile="Test_cats.json"
-Russwindow=Langwindow(data,Rusfile)
+
+Rusfile="Rus_cats.json"
+words={}
+with open(Rusfile, "r") as f:
+            data = json.load(f)
+            for k, v in data.items():
+                 words.update({k:v})
+print("this is RUswords NOW!" + str(words))
+Russwindow=Langwindow(words,Rusfile, "Russvocabcheck.json")
 
 #Russwindow.ident=Russwindow
 Russwindow.test()
-Germwindow=Langwindow(categories, Rusfile)
-Spanwindow=Langwindow(SpanCategories, Rusfile)
+Germwindow=Langwindow(categories, Rusfile, "Germvocabcheck.json")  #use last variable to check how many times a word guessed correctly in Langtest
+Spanwindow=Langwindow(SpanCategories, Rusfile, "Spanvocabcheck.json")
 #Germwindow.wordslist=categories
 
 
