@@ -36,7 +36,10 @@ class TestGenerator:
               print(self)
               print("this is X " + str(x))
               print(x)
-              Wordroot = Toplevel()
+
+              
+                     #json.dump(data, f, indent=2)
+                         
                      
               
             #  Windowlabel=Label(Wordroot, text=x)
@@ -53,8 +56,12 @@ class TestGenerator:
                    if key == x:
                      print ("this is "+ key)
                      print ("this is categories [x]")
-                     print(categories[x])
+                     #print(categories[x])
                      print("this is self.wordslist[x]"+ str(self.wordslist[x]))
+                     if self.wordslist[x]=={}:
+                         print("you must add words")
+                         return
+                    
                      testcats=self.wordslist[x]   #here we are splitting the categories dict into only the part that conforms to the original category the user selected (i.e abstract, verbs etc)
                      return testcats
               
@@ -62,17 +69,50 @@ class TestGenerator:
               formattedwords=self.wordslist.items()
               print("this is formattedwords " + str(formattedwords))
               testcats=genlist(formattedwords)
+             
               def genkey():
                   print("this is " + str(testcats))
-                  key=random.choice(list(testcats))
-                  Germlabel=Label(Wordroot, text="How do you say " + key + " in English?")
-                  Germlabel.pack()
-                  return key
+                  
+                  try:
+                      key=random.choice(list(testcats))
+                      return key
+                  except:
+                      Warnwin=Toplevel()
+                      Warnlabel=Label(Warnwin, text="There are no words in this category, please update category in order to Test!")
+                      Warnlabel.pack(side=TOP)
+                      warnvar=IntVar()
+                      warnvar.set(1)
+                      def destroy():
+                          Warnwin.destroy()
+                          return
+                      Warnbut=Radiobutton(Warnwin,text="ok", variable=warnvar,value=2,command=destroy)
+                      Warnbut.pack(side=BOTTOM)
+                      return
+                  
+                  
+                  
+                  
+             
               key=genkey()
               
+              
+              if key == None:
+                  return
+                  
+              
+              Wordroot=Toplevel()
+              Germlabel=Label(Wordroot, text="How do you say " + key + " in English?")
+              Germlabel.pack()
              
+              
+             
+              
               e1 = Entry(Wordroot, textvariable=name)
+              
               def checkinput(event):
+
+                  
+
                  
                   name=e1.get()  
                   for k, v in testcats.items():
@@ -90,88 +130,9 @@ class TestGenerator:
                       print("less")
                       numbcontents+=1
                       print("this is newnumb " + str(numbcontents))
-                      
+                      ###HERE IS WHERE if name ==target val goes !
                       if name==targetval:
-                                              print("well done!")
-                                              with open(self.vocabfile, 'r') as f:     #NOTE: here because is using tkinter EVENT logic this func is actualyl called with LANGWINDOW class so can use its properties such as self.vocabfile etc 
-                                                    data = json.load(f)
-                                                    if key not in data:
-                                                        print("first time word has come up!")
-                                                        d1={key:1}
-                                                        data.update(d1)
-                                                        with open(self.vocabfile, 'w') as f:
-                                                             json.dump(data, f, indent=2)
-                                                        
-                                                    elif key in data:
-                                                        valueint=int(data[key])
-                                                        
-                                                        if valueint >= 2:  #change this back to 5!!
-                                                            Questionwind=Toplevel()
-                                                            QuestLabel=Label(Questionwind, text="you have guessed correctly over five times now, do you want to remove the word from the vocab list?")
-                                                            QuestLabel.pack(side=TOP)
-                                                            def remove():
-                                                                
-                                                                        
-                                                                Questionwind.destroy()
-                                                            def notremove():
-                                                                print (self.wordslist)
-                                                                print (str(self.usefile)+ "is self.usefile")
-                                                                print("this is cureent key! " + currentkey)
-                                                                print("this is self.wordslist" + str(self.wordslist))
-                                                                
-                                                                with open(self.usefile, "r") as f:
-                                                                    data=json.load(f)
-                                                                    for k in data:
-                                                                        print(k)
-                                                                        print(data[k])
-                                                                        if currentkey in data[k]:
-                                                                
-                                                                           print("item found and is " + currentkey)
-                                                                           with open (self.usefile, "r") as f:
-                                                                               data=json.load(f)
-                                                                               d = {k: v for k,v in data.items() if v}    #in order to iterate over dict have to recast it into a list in this way
-                                                                               for k in d:
-                                                                                   print("this is data[k]" + str(d[k]))
-                                                                               for x  in d[k]:
-                                                                                  if currentkey== x:
-
-                                                                                       print("x found and is " + currentkey)
-                                                                                       d[k].pop(x) 
-
-                                                                                 #      del data[k][x]
-                                                                                       
-                                                                                       with open(self.usefile, "w") as f:
-                                                                                    
-                                                                                           json.dump(d, f, indent=2)
-                                                                                           Questionwind.destroy()
-                                                                                      
-                                                                                           print (currentkey+ "destroyed")
-                                                                                       break
-                                                                               else:
-                                                                                        pass
-                                                                Questionwind.destroy()
-                                                            var=IntVar()
-                                                            var.set(0)
-                                                            Rad1=Radiobutton(Questionwind,variable=var, value=1, text="yes", command=remove)
-                                                            Rad2=Radiobutton(Questionwind, text="no",variable=var, value=2, command=notremove)
-                                                            Rad1.pack(side="left")
-                                                            Rad2.pack(side="left")
-                                                            print("you have guessed correctly over five times now!")
-                                                            d1={key:valueint}
-                                                            data.update(d1)
-                                                            with open(self.vocabfile, 'w') as f:
-                                                                         json.dump(data, f, indent=2)
-                                                        elif valueint<= 5:
-                                                                  print("you have not guessed correctly more than five times in the current session!")
-                                                                  valueint+=1
-                                                                  d1={key:valueint}
-                                                                  data.update(d1)
-                                                                  with open(self.vocabfile, 'w') as f:
-                                                                           json.dump(data, f, indent=2)
-                                                    
-                                                    
-
-                                               
+                                                                                             
                                               print("self.vocab= " + str(self.vocabfile))
                                               Wordroot.destroy()
                                               print("this is original x" )
