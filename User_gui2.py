@@ -44,7 +44,7 @@ class Langwindow:
         
        
         print("this is words " + str(self.wordslist))
-        LangTest=TestGenerator(self.wordslist)  #arg was self.wordslist
+        LangTest=TestGenerator(self.wordslist,self.vocabfile)  #arg was self.wordslist
         print("this is LangTest.vocab " + str(LangTest.vocab))
         LangTest.hoola()
  #      LangTest.parent=Langroot
@@ -297,7 +297,7 @@ class Langwindow:
      #       print("this is current list value "+str(list)) + "this is current var "+str(var.get())
             iterlist+=1
             print(list)
-            Radiobutton=tkinter.Radiobutton(wordframe, text=word,value=iterlist, variable=var,command=lambda self=self,  x=word: LangTest.Change(self,x)) #vocab=words
+            Radiobutton=tkinter.Radiobutton(wordframe, text=word,value=iterlist, variable=var,command=lambda self=self,vocab=self.vocabfile,  x=word: LangTest.Change(self,vocab,x)) #vocab=words
             buttonlist.append(Radiobutton)
             #you need a lambda to pass the particular WORD of the item being iterated over into the function as argument (otherwise it only does this AFTER all buttons created and passes LAST word in)
         #here HAD command=partial(Change)) and worked 
@@ -355,6 +355,9 @@ Russwindow=Langwindow(Ruswords,Rusfile, "Russvocabcheck.json")
 #Russwindow.ident=Russwindow
 Russwindow.test()
 Germfile="Germ_cats.json"
+with open ("Germvocabcheck.json","w")as f:
+                         contents="{}"   #NEED TO 'wipe' this every time app is run otherwise is stores previous scores and vocab and other funcs don'trun properly
+                         f.write(contents)
 Germwords=WordsGen(Germfile)
 Germwindow=Langwindow(Germwords, Germfile, "Germvocabcheck.json")  #use last variable to check how many times a word guessed correctly in Langtest
 Spanfile="Span_cats.json"
