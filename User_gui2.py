@@ -10,6 +10,7 @@ import random
 import numpy as np
 from Wordsremove import Wordsremove
 import json
+import win32api
 
 
 root = tkinter.Tk()
@@ -227,6 +228,112 @@ class Langwindow:
                 
             Radiobutton3=tkinter.Radiobutton(rootwindow, text="click to edit a category", variable=testvar, bg="red", value=1, command=lambda vocabtodisplay=self.wordslist,wordsused=[]:Removecat(vocabtodisplay,wordsused))
             Radiobutton3.pack(side=BOTTOM)
+            def CategoryDelete(words,wordsused):
+                
+              
+              Deleteroot=Toplevel(root)
+              Deleteroot.geometry("500x500")
+              Deletelabel=Label(Deleteroot, text="Please choose a Delete!")
+              Deletelabel.pack(side="top")
+              DeleteFrame=Frame(Deleteroot, height="150", width="150", bg="green")
+              DeleteFrame.pack(fill="both", expand="True")
+              SelectFrame3=Frame(Deleteroot, height="150", width="150", bg="orange")
+              SelectFrame3.pack(fill="both",expand="True")
+              testvar=IntVar()
+              iteration=0
+              testvar.set(1)
+              vocabtomod=self.wordslist
+              vocablist=[]
+              for k, v in vocabtomod.items():     # in order to do for k, v in pyton3 need to use .items() to convert into a list that CAN be iterated over
+                    vocabitem=k, v
+                    vocablist.append(vocabitem)
+              print(vocablist)
+              newvar=IntVar()
+              newvar.set(1)
+              iterlist=0
+              def CategoryGone(x):
+                  Deleteroot.destroy()
+                  Checkroot=Toplevel(root)
+                  Checkroot.geometry("500x500")
+                  CheckLab=Label(Checkroot, text="Are you sure?")
+                  CheckLab.pack()
+                  e1=Entry(Checkroot,textvariable=v)
+                  def checkvalue5(event,self):
+                      name=e1.get()
+                      if name=="y" or name =="yes":
+                          with open(self.usefile, "r") as f:
+                              data=json.load(f)
+                              for item in data:
+                                  if item ==x:
+                                      data.pop(item)
+                                      with open(self.usefile, "w") as f:
+                                          json.dump(data, f, indent=2)
+                                      for item in self.wordslist:
+                                          if item ==x:
+                                              self.wordslist.pop(x)
+                                              break
+                                      Checkroot.destroy()
+                                      rootwindow.destroy()
+                                      self.make() #THIS 'refreshes' window with newly updated values VERY USEFUL AND SMOOTH!
+                                      #rootwindow=Toplevel(root)
+                                      #rootwindow.geometry("700x700")
+                                  
+
+                      elif name =="n" or name =="no":
+                          Checkroot.destroy()
+                      else:
+                          win32api.MessageBox(0, "Please select an appropriate value, must be (y)es or (n)o", "Incorrect Entry")
+                          e1.destroy()
+                          Checkroot.destroy()
+                          CategoryGone(x)
+                          
+                      
+                  e1.bind("<Return>",lambda event,self=self:checkvalue5(event,self))
+                  e1.pack()
+              for word in words:
+                 
+                 
+                 if iteration <=2:
+                              
+            #list+=1 #use this to create values for the radiobutton value (determines if is on or off) this works!!
+     #       print("this is current list value "+str(list)) + "this is current var "+str(var.get())
+                              iteration+=1
+                              Radiobutton=tkinter.Radiobutton(DeleteFrame, text=word, variable=testvar, value=iteration,command=lambda x=word:CategoryGone(x), padx=50)
+                              Radiobutton.pack(side=LEFT)
+            #you need a lambda to pass the particular WORD of the item being iterated over into the function as argument (otherwise it only does this AFTER all buttons created and passes LAST word in)
+        #here HAD command=partial(Change)) and worked 
+            #if list == 0:Radiobutton.select()
+                              Radiobutton.pack(side="left", padx=50)
+                              wordsused.append(word)
+                              iteration+=1
+                 elif iteration >2:
+                     iteration=0
+                     print("wordsusedis" +str(wordsused))
+                     usedword_set=set(wordsused)  #SET returns UNORDERED LIST (need to do to compare for some reason, see below)
+                     result=[]
+                     for n in self.wordslist:
+                         if not n in usedword_set and not n in result:    #check each item in wordlist if it has NOT been used (ie is NOT in usedword(set)) then add it to new list called result
+                                   result.append(n)
+                                   print(str(result) + " THis is RESULT FROM WORDLIST")
+                                   
+                     if len(result) ==0:
+                          break
+                     
+                     def Newframe2(words,wordsused):
+                           
+                           Deleteroot.destroy()
+                           
+                           
+                           CategoryDelete(words,wordsused)
+                     
+                     
+                     Radiobutton=tkinter.Radiobutton(SelectFrame3, text="next page!", value=iterlist, variable=var, command=lambda words=result:Newframe2(words,wordsused))
+                     Radiobutton.pack(side="left",padx=200)
+                     break
+              
+                
+            Radiobutton4=tkinter.Radiobutton(rootwindow,text="click to remove a category", variable=testvar, bg="red", value =2,command=lambda vocabtodisplay=self.wordslist,wordsused=[]:CategoryDelete(vocabtodisplay,wordsused))
+            Radiobutton4.pack(side=BOTTOM)
             def UpdateWords(words,wordsused):
               
               Updateroot=Toplevel(root)
@@ -454,7 +561,7 @@ class Langwindow:
                                 json.dump(data,f,indent=2)
                             WordRoot2.destroy()
                             rootwindow.destroy()
-                            self.make()       
+                            self.make()     #This 'refreshes' main Lang window with newly updated values (if you just redefine rootwindow it doesnt change at all!)  
                     e1.bind("<Return>",lambda event, self=self:checkvalue2(event,self))
                     e1.pack()
             Radiobutton3=tkinter.Radiobutton(rootwindow, text="click to add a category", variable=testvar, bg="red", value=10000, command=AddCategory)
