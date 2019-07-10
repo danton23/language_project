@@ -3,11 +3,11 @@ from tkinter import *
 import shlex
 import json
 
-def Wordsremove(self,Windowroot,Wordlist,wordlist2,vocabcat,listuse, totaliteration,usedwords): #For Langage App just need to change listuse to pass in vocab items on first pass
+def Wordsremove(self,Windowroot,Wordlist,wordlist2,vocabcat,listuse, totaliteration,usedwords,category): #For Langage App just need to change listuse to pass in vocab items on first pass
   wordlist=listuse
   print("listusebelow")
-  print(listuse)
-  if len(listuse)==0:
+
+  if len(wordlist)==0:
     warnvar=IntVar()
     warnvar.set(1)
     Warnwin=Toplevel()
@@ -24,12 +24,10 @@ def Wordsremove(self,Windowroot,Wordlist,wordlist2,vocabcat,listuse, totaliterat
   print("Windowroot is " + str(Windowroot))
   Windowroot.destroy()
   print("BELOW is LISTUSE this iteration;;;;;''''';;;;;")
-  print(listuse)
-  wordit=len(wordlist)
   print("WORDLIST2 LEN BELOW! ###############!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   print(len(wordlist2))
   print(str(totaliteration) + "is initialisation totalit#1#1#1???????")
-  print(wordit)
+  
   print("THIS IS SEEEEEEEEEEEEEEEEEEEEELF " + str(self))
   
   try:
@@ -137,7 +135,7 @@ def Wordsremove(self,Windowroot,Wordlist,wordlist2,vocabcat,listuse, totaliterat
                  print("RADDAT BELOW")
                  print(Raddat)
                  print("remove")
-                 wordlist.remove(Raddat)   #take it out of overall wordlist
+                 wordlist.pop(Raddat)   #take it out of overall wordlist
                  print(wordlist)
                  print (str(Raddat))   #text[4] is val 
                  for x in Radlist:   #i.e for ever radiobutton listed in the list 
@@ -155,6 +153,21 @@ def Wordsremove(self,Windowroot,Wordlist,wordlist2,vocabcat,listuse, totaliterat
                       Radlist.remove(x)    #need to also remove it from buttonlist
                  else:
                       print("no match")
+                 print(str(self.wordslist) + " AFTER POP")
+                 with open (self.usefile, "r") as f:
+                   data=json.load(f)
+                 for k, v in data.items():
+                     if k == category:
+                       data[k].pop(checkvalue)
+                       print("FOUND")
+                       with open (self.usefile,"w") as f:
+                         json.dump(data,f, indent=2)
+
+                       break
+                     else:
+                       print("not found")
+                       break
+                 Wordroot.destroy()
                def notremove():
                  print("not remove")
                  QuestionWind.destroy()
@@ -167,10 +180,10 @@ def Wordsremove(self,Windowroot,Wordlist,wordlist2,vocabcat,listuse, totaliterat
                
                
               
-  for word in listuse:
+  for word in wordlist:
       
-      totaliteration+=1
-      print("word added " + word + "total its = " + str(totaliteration))
+      
+      print("word added " + word + "total its = " + str(wordlist))
       worditerations+=1
       
       pageit+=1
@@ -255,6 +268,7 @@ def Wordsremove(self,Windowroot,Wordlist,wordlist2,vocabcat,listuse, totaliterat
           print(str(testvar.get())+ " TESTVAR now")
           for item in testlist:
               Framename3="Frame"+str(rownum)
+              print("ROWNUM IS"+str(rownum))
               buttonval+=1
               print(item+"THIS IS ITEM IN TESTLIST")
               radit+=1
@@ -290,7 +304,7 @@ def Wordsremove(self,Windowroot,Wordlist,wordlist2,vocabcat,listuse, totaliterat
              print(str(wordlist) + " this is wordlist")
              print (str(usedwords)+ " this is usedwords")
              print(str(newwordslist)+"is newwordslist")
-             RadChange=Radiobutton(Frame4, text="change page!", variable=testvar, value=100000, command= lambda self=self,Windowroot=None,Wordlist=Wordlist,wordlist2=wordlist2,vocabcat=vocabcat,totaliteration=totaliteration,listuse=newwordslist, usedwords=usedwords: Wordsremove(self,Windowroot,Wordlist,wordlist2,vocabcat,listuse,totaliteration,usedwords))
+             RadChange=Radiobutton(Frame4, text="change page!", variable=testvar, value=100000, command= lambda self=self,Windowroot=None,Wordlist=Wordlist,wordlist2=wordlist2,vocabcat=vocabcat,totaliteration=totaliteration,listuse=newwordslist, usedwords=usedwords, category=category: Wordsremove(self,Windowroot,Wordlist,wordlist2,vocabcat,listuse,totaliteration,usedwords,category=category))
              RadChange.pack(side=LEFT, padx=200)
              testlist=[]
              break
