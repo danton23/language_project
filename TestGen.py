@@ -4,6 +4,7 @@ from Germ_cats import *
 # from Spanish_cats import *
 from tkinter import *
 import json
+import win32api
 class TestGenerator:
     file="times.txt"
     def __init__(self, vocab,vocabfile):
@@ -126,7 +127,10 @@ class TestGenerator:
                   
               
               Wordroot=Toplevel()
-              Germlabel=Label(Wordroot, text="How do you say " + key + " in English?")
+              print("UTF*8")
+              print  (key.encode("cp1252").decode("utf-8"))   #When working with Cyrillic often seems to be badly encoded so spits out what looks like Asian writing - this line converts it to proper Cyrillic encoding and then decodes to standard UTF-8
+              key2=key.encode("cp1252").decode("utf-8")
+              Germlabel=Label(Wordroot, text="How do you say " + key2 + " in English?")
               Germlabel.pack()
              
               
@@ -161,25 +165,7 @@ class TestGenerator:
                   print(name)
                   print("BELOW IS SELF.VOCABFILE")
                   print(str(self.vocabfile))
-                  if numbcontents<=5:
-                      print("less")
-                      numbcontents+=1
-                      print("this is newnumb " + str(numbcontents))
-                      ###HERE IS WHERE if name ==target val goes !
-                  else:
-                       
-                            if v[0:2]=="to":
-                           
-                           
-                                print("to " + v[3:6] + " here are the first three letters of the word!")
-                                with open(file, "w") as f:
-                                                 f.write("1")
-                          
-                            else:
-                                print(targetval + "this is value")
-                                print(targetval[:3] + " here are the first three letters of the word! ")
-                                with open(file, "w") as f:
-                                  f.write("1")
+                  
                   if name==targetval:
                                              
                                               print("well done!")
@@ -388,6 +374,31 @@ class TestGenerator:
                                                     contents=f.read()
                                                     print("this is new contents "+ contents)
                                               print ("try again!")
+                                              if numbcontents<=5:
+                                                             print("less")
+                                                             numbcontents+=1
+                                                             print("this is newnumb " + str(numbcontents))
+                      ###HERE IS WHERE if name ==target val goes !
+                     
+                                              else:
+                       
+                                                            if targetval[0:2]=="to":
+                                                                           worduse=targetval[3:6]
+                                                                           print("WORDUSE BELOW")
+                                                                           print(worduse)
+                                                                           win32api.MessageBox(0, "to " + str(worduse) + " here are the first three letters of the word", "Incorrect Entry")
+                                                                           print("to " + v[3:6] + " here are the first three letters of the word!")
+                                                                           with open(file, "w") as f:
+                                                                                              f.write("1")
+                                                                           numbcontents=0
+                          
+                                                            else:
+                                                                           win32api.MessageBox(0, targetval[:3] + " here are the first three letters of the word", "Incorrect Entry")
+                                                                           print(targetval + "this is value")
+                                                                           print(targetval[:3] + " here are the first three letters of the word! ")
+                                                                           with open(file, "w") as f:
+                                                                                           f.write("1")
+                                                                           numbcontents=0
                                               
                   
                           

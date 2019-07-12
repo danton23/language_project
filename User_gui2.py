@@ -7,10 +7,10 @@ from functools import partial
 from TestGen import TestGenerator
 from Span_cats import *
 import random
-import numpy as np
 from Wordsremove import Wordsremove
 import json
 import win32api
+
 
 
 root = tkinter.Tk()
@@ -24,11 +24,12 @@ Rootvar=IntVar()
 Rootvar.set(1)
 print("this is SpanCategories " + str(SpanCategories))
 class Langwindow:
-    def __init__(self, wordslist, usefile, vocabfile):
+    def __init__(self, wordslist, usefile, vocabfile,language):
         
          self.wordslist=wordslist
          self.usefile=usefile
          self.vocabfile=vocabfile
+         self.language=language
          words={}
          
         
@@ -81,7 +82,8 @@ class Langwindow:
              
             iterlist=0
             rootwindow=Toplevel(root)
-            rootwindow.geometry("700x700")
+            rootwindow.geometry("550x350")
+            
             def RemoveWords():
               Removeroot=Toplevel(root)
               Removeroot.geometry("300x300")
@@ -283,6 +285,7 @@ class Langwindow:
                           Checkroot.destroy()
                       else:
                           win32api.MessageBox(0, "Please select an appropriate value, must be (y)es or (n)o", "Incorrect Entry")
+                          print("please select (y)es or (n)o")
                           e1.destroy()
                           Checkroot.destroy()
                           CategoryGone(x)
@@ -522,7 +525,7 @@ class Langwindow:
                     e1.pack()
                 wordvar=IntVar()
                 wordvar.set(0)
-                Radiobutton=tkinter.Radiobutton(WordRoot, variable=wordvar, value=1, text="click to add a new German word", command=checkvalue1)
+                Radiobutton=tkinter.Radiobutton(WordRoot, variable=wordvar, value=1, text="click to add a new "+ self.language +" word", command=checkvalue1)
                 Radiobutton.pack()
                
                            
@@ -570,8 +573,9 @@ class Langwindow:
             WindLabel.pack(side="top")
             wordframe=Frame(rootwindow, height="50", width="250", bg="blue")
             wordframe.pack(expand="True", fill="both")
-            Selectframe=Frame(rootwindow, height="25", width="250", bg="green")
+            Selectframe=Frame(rootwindow, height="25", width="50", bg="green")
             Selectframe.pack(expand="True",fill="both")
+            
                 
             
             iteration=0
@@ -585,7 +589,7 @@ class Langwindow:
                  print(word + "WORD!")
                  iterlist+=1
                  
-                 if iteration <3:
+                 if iteration <2:
                               print("Current iteration"+str(iteration))
                               ("Currentwordis" + str(word))
                               
@@ -600,7 +604,7 @@ class Langwindow:
                               wordsused.append(word)
                               iteration+=1
                               
-                 elif iteration >2:
+                 elif iteration >1:
                     
                     
                     Radiobutton=tkinter.Radiobutton(wordframe, text=word,value=iterlist, variable=var,command=lambda self=self,vocab=self.usefile, x=word: LangTest.Change(self,vocab,x)) #vocab=words
@@ -677,14 +681,17 @@ def current_languages():
 languages=current_languages()
 print("these are languages!" + str(languages))
 
-for item in languages:
-    print (item)
-    Newwind=Langwindow(str(item)+"words", str(item)+"_cats.json", str(item)+".json")
-    print (Newwind.usefile)    #way of dynamically checking existing languages - try to figure out how to use this to generate Radiobuttons!
+#for item in languages:
+ #   print (item)
+  #  Newwind=Langwindow(str(item)+"words", str(item)+"_cats.json", str(item)+".json", str(item))
+   # print (Newwind.usefile)    #way of dynamically checking existing languages - try to figure out how to use this to generate Radiobuttons!
     
 Rusfile="Rus_cats.json"
+with open("Russvocabcheck.json","w") as f:
+                      contents="{}"
+                      f.write(contents)
 Ruswords=WordsGen(Rusfile)
-Russwindow=Langwindow(Ruswords,Rusfile, "Russvocabcheck.json")
+Russwindow=Langwindow(Ruswords,Rusfile, "Russvocabcheck.json","Russian")
 
 #Russwindow.ident=Russwindow
 
@@ -692,18 +699,20 @@ Germfile="Germ_cats.json"
 with open ("Germvocabcheck.json","w")as f:
                          contents="{}"   #NEED TO 'wipe' this every time app is run otherwise is stores previous scores and vocab and other funcs don'trun properly
                          f.write(contents)
+with open("Spanvocabcheck.json", "w") as f:
+                         contents="{}"
+                         f.write(contents)
+
 Germwords=WordsGen(Germfile)
-Germwindow=Langwindow(Germwords, Germfile, "Germvocabcheck.json")  #use last variable to check how many times a word guessed correctly in Langtest
+Germwindow=Langwindow(Germwords, Germfile, "Germvocabcheck.json", "German")  #use last variable to check how many times a word guessed correctly in Langtest
 Spanfile="Span_cats.json"
 Spanwords=WordsGen(Spanfile)
-Spanwindow=Langwindow(Spanwords, Spanfile, "Spanvocabcheck.json")
+Spanwindow=Langwindow(Spanwords, Spanfile, "Spanvocabcheck.json", "Spanish")
 #Germwindow.wordslist=categories
 
 
 
-#def Spanwindow():
-#    Spanroot = tkinter.Tk()
- #   Spanroot.geometry("500x500")
+
 w= Radiobutton(frame, text ="German", variable=Rootvar,value=1, command=Germwindow.make, padx=1) #parent WAS root before
 w.pack(side="left", padx=50)
 w1 =Radiobutton(frame, text ="Russian",variable=Rootvar, value=2, command=Russwindow.make, padx=1)
